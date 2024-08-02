@@ -7,8 +7,6 @@ import { Task } from '../../common.type';
 
 const Container = styled.div`
   padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
