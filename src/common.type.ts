@@ -3,3 +3,9 @@ export interface Task {
   title: string;
   completed: boolean;
 }
+
+export enum FilterState {
+    All = 'all',
+    Completed = 'completed',
+    Incomplete = 'incomplete',
+  }

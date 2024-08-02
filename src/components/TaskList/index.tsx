@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchTasks, updateTask } from "../../store/reducers/task-reducers";
-import { Task } from "../../common.type";
+import {
+  fetchTasks,
+  setFilter,
+  updateTask,
+} from "../../store/reducers/task-reducers";
+import { FilterState, Task } from "../../common.type";
 import Button from "../Button";
 
 const Container = styled.div`
@@ -24,17 +28,38 @@ const TaskItem = styled.div`
   background-color: #fff;
 `;
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const TaskList: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { tasks, loading } = useSelector((state: RootState) => state.tasks);
+  const [filterVal, setFilterVal] = useState<FilterState>(FilterState.All);
+  const { tasks, loading, filter } = useSelector(
+    (state: RootState) => state.tasks
+  );
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
   const handleToggleCompletion = (task: Task) => {
-    dispatch(updateTask({ ...task, completed: !task.completed }))
+    dispatch(updateTask({ ...task, completed: !task.completed }));
   };
+
+  const handleSetFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value as FilterState;
+    setFilterVal(value);
+    dispatch(setFilter(value));
+  };
+
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "completed") return task.completed;
+    if (filter === "incomplete") return !task.completed;
+    return true;
+  });
 
   if (loading) {
     return <div>Loading...</div>;
@@ -42,8 +67,18 @@ const TaskList: React.FC = () => {
 
   return (
     <Container>
-      <h2>Tasks</h2>
-      {tasks.map((task) => (
+      <Header>
+        <h2>Tasks</h2>
+        <label>
+          <span>Filter:</span>
+          <select value={filterVal} onChange={handleSetFilter}>
+            <option value={FilterState.All}>All</option>
+            <option value={FilterState.Completed}>Completed</option>
+            <option value={FilterState.Incomplete}>Incomplete</option>
+          </select>
+        </label>
+      </Header>
+      {filteredTasks.map((task) => (
         <TaskItem key={task._id}>
           <span
             style={{
