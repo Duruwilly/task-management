@@ -9,6 +9,7 @@ import {
 } from "../../store/reducers/task-reducers";
 import { FilterState, Task } from "../../common.type";
 import Button from "../Button";
+import FilterSelect from "../Filter";
 
 const Container = styled.div`
   padding: 20px;
@@ -69,14 +70,7 @@ const TaskList: React.FC = () => {
     <Container>
       <Header>
         <h2>Tasks</h2>
-        <label>
-          <span>Filter:</span>
-          <select value={filterVal} onChange={handleSetFilter}>
-            <option value={FilterState.All}>All</option>
-            <option value={FilterState.Completed}>Completed</option>
-            <option value={FilterState.Incomplete}>Incomplete</option>
-          </select>
-        </label>
+        <FilterSelect filterVal={filterVal} onChange={handleSetFilter} />
       </Header>
       {filteredTasks.map((task) => (
         <TaskItem key={task._id}>
