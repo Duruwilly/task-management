@@ -23,7 +23,7 @@ export const addTask = createAsyncThunk('tasks/addTask', async (title: string) =
 });
 
 export const updateTask = createAsyncThunk('tasks/updateTask', async (task: Task) => {
-  const response = await api.patch(`/${task.id}`, { completed: task.completed });
+  const response = await api.patch(`/tasks/${task._id}`, { completed: task.completed });
   return response.data;
 });
 
@@ -43,8 +43,8 @@ const taskSlice = createSlice({
       .addCase(addTask.fulfilled, (state, action) => {
         state.tasks.unshift(action.payload);
       })
-      .addCase(updateTask.fulfilled, (state, action) => {
-        const index = state.tasks.findIndex(task => task.id === action.payload.id);
+      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        const index = state.tasks.findIndex(task => task._id === action.payload._id);
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }

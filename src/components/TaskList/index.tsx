@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { AppDispatch, RootState } from '../../store/store';
-import { fetchTasks, updateTask } from '../../store/reducers/task-reducers';
-import { Task } from '../../common.type';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchTasks, updateTask } from "../../store/reducers/task-reducers";
+import { Task } from "../../common.type";
+import Button from "../Button";
 
 const Container = styled.div`
   padding: 20px;
@@ -23,18 +24,6 @@ const TaskItem = styled.div`
   background-color: #fff;
 `;
 
-const Button = styled.button`
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 const TaskList: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { tasks, loading } = useSelector((state: RootState) => state.tasks);
@@ -44,7 +33,7 @@ const TaskList: React.FC = () => {
   }, [dispatch]);
 
   const handleToggleCompletion = (task: Task) => {
-    dispatch(updateTask({ ...task, completed: !task.completed }));
+    dispatch(updateTask({ ...task, completed: !task.completed }))
   };
 
   if (loading) {
@@ -54,12 +43,25 @@ const TaskList: React.FC = () => {
   return (
     <Container>
       <h2>Tasks</h2>
-      {tasks.map(task => (
-        <TaskItem key={task.id}>
-          <span>{task.title}</span>
-          <Button onClick={() => handleToggleCompletion(task)}>
-            {task.completed ? 'Mark Incomplete' : 'Mark Complete'}
-          </Button>
+      {tasks.map((task) => (
+        <TaskItem key={task._id}>
+          <span
+            style={{
+              textDecoration: task.completed ? "line-through" : "none",
+              color: task.completed ? "grey" : "black",
+            }}
+          >
+            {task.title}
+          </span>
+          <Button
+            disabled={task.completed}
+            onClick={() => handleToggleCompletion(task)}
+            style={{
+              textDecoration: task.completed ? "line-through" : "none",
+              background: task.completed ? "grey" : "",
+            }}
+            children="Mark complete"
+          />
         </TaskItem>
       ))}
     </Container>
