@@ -30,5 +30,4 @@ The important folders are located in the `src` directory. These include:
 - `src`
 - `gitignore`
 - `common.type.ts`
-- `tailwind.config.js`
 - `README.md`
